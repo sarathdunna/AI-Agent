@@ -17,3 +17,4 @@ docs/FSI_Report_Guidelines.docx
 docs/FSI_Report_Guidelines_v2.docx
 ~$*
 *.tmp
+*.tsbuildinfo
