@@ -68,7 +68,10 @@ def clean(dataset_id: str, steps: list[cleaning.CleaningStep]):
 
 @router.get("/{dataset_id}/cleaning-log")
 def cleaning_log(dataset_id: str):
-    meta = dataset_service.get_dataset_meta(dataset_id)
+    try:
+        meta = dataset_service.get_dataset_meta(dataset_id)
+    except dataset_service.DatasetValidationError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
     return json.loads(meta["cleaning_log_json"] or "[]")
 
 

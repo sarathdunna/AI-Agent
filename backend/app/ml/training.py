@@ -52,6 +52,14 @@ def train_model(
     algorithm: str, test_size: float = 0.2, random_state: int = 42, n_clusters: int = 3,
 ) -> dict:
     settings = get_settings()
+    dropped_missing_target = 0
+    if problem_type != "clustering":
+        # Rows without a target value cannot be used for supervised training.
+        n_before = len(df)
+        df = df.dropna(subset=[target])
+        dropped_missing_target = n_before - len(df)
+        if len(df) < 2:
+            raise ValueError(f"Target column '{target}' has fewer than 2 non-missing values")
     X = df[feature_columns].copy()
     preprocessor = build_preprocessor(df, feature_columns)
 
@@ -79,6 +87,8 @@ def train_model(
             metrics = evaluate_classification(y_test, y_pred, y_proba)
         else:
             metrics = evaluate_regression(y_test, y_pred)
+        if dropped_missing_target:
+            metrics["rows_dropped_missing_target"] = dropped_missing_target
 
     model_id = uuid.uuid4().hex[:12]
     model_path = settings.MODELS_DIR / f"{model_id}.joblib"

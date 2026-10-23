@@ -40,6 +40,7 @@
 |---|---|---|
 | `ANTHROPIC_API_KEY` | backend | Enables LLM explanations; omit to run without AI |
 | `LLM_PROVIDER` | backend | Currently only `anthropic` supported |
+| `LLM_MODEL` | backend | Claude model ID (default `claude-opus-5-5`) |
 | `FRONTEND_URL` | backend | CORS allow-origin |
 | `BACKEND_URL` | backend | Informational; not required by code |
 | `MAX_UPLOAD_MB` | backend | Upload size limit |

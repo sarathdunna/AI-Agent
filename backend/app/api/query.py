@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import duckdb
 from fastapi import APIRouter, HTTPException
 
 from app.agents import pandas_agent, query_agent, sql_agent, insight_agent
@@ -24,6 +25,8 @@ def sql_endpoint(dataset_id: str, req: SQLRequest):
             result = sql_agent.run_sql(req.sql, df)
         except UnsafeSQLError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
+        except duckdb.Error as exc:
+            raise HTTPException(status_code=400, detail=f"SQL error: {exc}") from exc
         return {"sql": req.sql, "sql_source": "user", **result}
     if not req.question:
         raise HTTPException(status_code=400, detail="Provide either 'sql' or 'question'")
@@ -32,6 +35,8 @@ def sql_endpoint(dataset_id: str, req: SQLRequest):
         result = sql_agent.run_sql(sql, df)
     except UnsafeSQLError as exc:
         raise HTTPException(status_code=400, detail=f"Generated SQL was rejected: {exc}") from exc
+    except duckdb.Error as exc:
+        raise HTTPException(status_code=400, detail=f"Generated SQL failed: {exc}") from exc
     return {"sql": sql, "sql_source": source, **result}
 
 

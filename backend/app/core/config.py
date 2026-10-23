@@ -4,13 +4,14 @@ from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-BASE_DIR = Path(__file__).resolve().parents[3]  # project root (D:\agent project)
+BASE_DIR = Path(__file__).resolve().parents[3]  # project root
 BACKEND_DIR = Path(__file__).resolve().parents[2]  # backend/
 
 
 class Settings(BaseSettings):
     ANTHROPIC_API_KEY: str = ""
     LLM_PROVIDER: str = "anthropic"
+    LLM_MODEL: str = "claude-opus-5-5"
     FRONTEND_URL: str = "http://localhost:5173"
     BACKEND_URL: str = "http://localhost:8000"
     MAX_UPLOAD_MB: int = 25

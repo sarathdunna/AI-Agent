@@ -15,7 +15,10 @@ router = APIRouter(prefix="/ml", tags=["ml"])
 
 @router.get("/problem-type")
 def get_problem_type(dataset_id: str, target: str | None = None):
-    df = dataset_service.load_working_df(dataset_id)
+    try:
+        df = dataset_service.load_working_df(dataset_id)
+    except dataset_service.DatasetValidationError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
     return problem_id.identify_problem_type(df, target)
 
 

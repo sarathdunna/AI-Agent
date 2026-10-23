@@ -27,6 +27,18 @@ def test_unsafe_sql_rejected(bad_sql, df):
         run_sql(bad_sql, df)
 
 
+@pytest.mark.parametrize("file_sql", [
+    "SELECT * FROM read_csv_auto('/etc/passwd')",
+    "SELECT * FROM read_text('/etc/hostname')",
+    "SELECT * FROM '/etc/passwd'",
+])
+def test_file_access_blocked(file_sql, df):
+    # These pass the keyword checks; the DuckDB connection itself must refuse them.
+    with pytest.raises(Exception) as exc_info:
+        run_sql(file_sql, df)
+    assert not isinstance(exc_info.value, UnsafeSQLError)
+
+
 @pytest.mark.parametrize("good_sql", [
     "SELECT * FROM data",
     "SELECT a, COUNT(*) FROM data GROUP BY a",

@@ -49,6 +49,7 @@ cp .env.example .env
 ```
 ANTHROPIC_API_KEY=          # leave blank to run without AI explanations
 LLM_PROVIDER=anthropic
+LLM_MODEL=claude-opus-5-5    # Claude model used for explanations and NL->SQL
 FRONTEND_URL=http://localhost:5173
 BACKEND_URL=http://localhost:8000
 MAX_UPLOAD_MB=25

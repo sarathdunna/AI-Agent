@@ -18,11 +18,11 @@ def _rule_based_sql(question: str, df: pd.DataFrame) -> str:
         return "SELECT * FROM data LIMIT 5"
     for col in cols:
         if col.lower() in q and ("average" in q or "mean" in q):
-            return f'SELECT AVG("{col}") AS average_{col} FROM data'
+            return f'SELECT AVG("{col}") AS "average_{col}" FROM data'
         if col.lower() in q and ("max" in q or "highest" in q):
-            return f'SELECT MAX("{col}") AS max_{col} FROM data'
+            return f'SELECT MAX("{col}") AS "max_{col}" FROM data'
         if col.lower() in q and ("min" in q or "lowest" in q):
-            return f'SELECT MIN("{col}") AS min_{col} FROM data'
+            return f'SELECT MIN("{col}") AS "min_{col}" FROM data'
     return "SELECT * FROM data LIMIT 10"
 
 
@@ -47,7 +47,9 @@ def generate_sql(question: str, df: pd.DataFrame) -> tuple[str, str]:
 
 def run_sql(sql: str, df: pd.DataFrame) -> dict:
     validated = validate_readonly_sql(sql)
-    con = duckdb.connect(database=":memory:")
+    # No file or network access: otherwise table functions such as
+    # read_csv('/etc/passwd') would pass the keyword checks and read server files.
+    con = duckdb.connect(database=":memory:", config={"enable_external_access": False})
     con.register("data", df)
     try:
         result_df = con.execute(validated).fetchdf()
