@@ -1,5 +1,10 @@
 # Data Analyst + ML Agent
 
+[![CI](https://github.com/sarathdunna/AI-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/sarathdunna/AI-Agent/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
+![React + TypeScript](https://img.shields.io/badge/frontend-React%20%2B%20TypeScript-61dafb)
+
 A full-stack M.Tech major project: an AI-assisted data analysis and machine
 learning platform. Upload a dataset, profile and clean it, explore it (EDA,
 charts, natural-language Q&A, SQL), train and compare ML models, get
@@ -25,12 +30,11 @@ core feature works without any LLM key.
 
 ## Local setup
 
-### 1. Clone / open the project
+### 1. Clone the project
 
-```
-cd "D:\agent project"   # Windows
-# or
-cd /path/to/agent-project  # macOS / Linux
+```bash
+git clone https://github.com/sarathdunna/AI-Agent.git
+cd AI-Agent
 ```
 
 ### 2. Configure environment variables
@@ -57,6 +61,15 @@ MAX_UPLOAD_MB=25
 cd backend
 python -m venv .venv
 .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+
+**macOS / Linux:**
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 ```
@@ -91,8 +104,12 @@ This produces `customer_churn_sample.csv` (classification demo) and
 
 ```bash
 cd backend
-.venv\Scripts\python.exe -m pytest
+# with the virtual environment activated (see step 3):
+python -m pytest
 ```
+
+The same tests, plus a frontend production build, run on every push and pull
+request via GitHub Actions (`.github/workflows/ci.yml`).
 
 ## Docker Compose (alternative to manual setup)
 
@@ -138,3 +155,7 @@ docs/          project docs for the M.Tech report and demo
   unset; only the wording is affected, never the computed numbers.
 - Hyperparameter search spaces are intentionally small (suited to an academic
   demo / limited compute), not exhaustive.
+
+## License
+
+Released under the [MIT License](LICENSE).
